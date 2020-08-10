@@ -8,26 +8,28 @@ import backIcon from '../../assets/images/icons/back.svg';
 import './styles.css'
 
 interface PageHeaderProps {
-    title: string;
+		title: string;
+		description?: string; // Prop Opcional
 }
 
 const PageHeader:React.FC<PageHeaderProps> = (props) => {
-  return (
-    <header className="page-header">
-        <div className="top-bar-container">
-            <Link to="/">
-                <img src={backIcon} alt="Voltar"/>
-            </Link>
-            <img src={logoImg} alt="Proffy"/>
-        </div>
+	return (
+		<header className="page-header">
+				<div className="top-bar-container">
+						<Link to="/">
+								<img src={backIcon} alt="Voltar"/>
+						</Link>
+						<img src={logoImg} alt="Proffy"/>
+				</div>
 
-        <div className="header-content">
-            <strong>{props.title}</strong>
+				<div className="header-content">
+						<h2>{props.title}</h2>
+						{ props.description ? <p>{props.description}</p> : null }
 
-            {props.children}
-        </div>        
-    </header>
-  );
+						{props.children}
+				</div>        
+		</header>
+	);
 }
 
 export default PageHeader;

@@ -21,8 +21,8 @@ export default class ClassesController {
     if(!filters.week_day || !filters.subject || !filters.time) {
       return response.status(400).json({
         error: 'Missing filter to search classes'
-      })
-    }
+      });
+    };
 
     const timeInMinutes = convertHourToMinutes(time);
 
@@ -59,43 +59,44 @@ export default class ClassesController {
     const trx = await db.transaction();
 
     try {
-        // Envia os dados para a tabela USERS
-        const insertedUsersId = await trx('users').insert({
-            name,
-            avatar,
-            whatsapp,
-            bio
-        });
+      // Envia os dados para a tabela USERS
+      const insertedUsersId = await trx('users').insert({
+        name,
+        avatar,
+        whatsapp,
+        bio
+      });
 
-        const user_id = insertedUsersId[0]
+      // Pega o ID do usuário criado
+      const user_id = insertedUsersId[0]
 
-        // Envia os dados para a tabela CLASSES
-        const insertedClassesId = await trx('classes').insert({
-            subject,
-            cost,
-            user_id
-        });
+      // Envia os dados para a tabela CLASSES
+      const insertedClassesId = await trx('classes').insert({
+        subject,
+        cost,
+        user_id
+      });
 
-        const class_id = insertedClassesId[0];
+      // Pega o ID da aula criada
+      const class_id = insertedClassesId[0];
 
-        // Envia os dados para a tabela CLASS-SCHEDULE
-        const classSchedule = schedule.map((scheduleItem: ScheduleItem) => {
-            return {
-                week_day: scheduleItem.week_day,
-                from: convertHourToMinutes(scheduleItem.from),
-                to: convertHourToMinutes(scheduleItem.to),
-                class_id
-            };
-        });
+      // Envia os dados para a tabela CLASS-SCHEDULE
+      const classSchedule = schedule.map((scheduleItem: ScheduleItem) => {
+        return {
+            week_day: scheduleItem.week_day,
+            from: convertHourToMinutes(scheduleItem.from),
+            to: convertHourToMinutes(scheduleItem.to),
+            class_id
+        };
+      });
 
-        await trx('class_schedule').insert(classSchedule);
+      await trx('class_schedule').insert(classSchedule);
 
-        await trx.commit(); //Aqui ele faz alterações no banco
+      await trx.commit(); //Aqui ele faz alterações no banco
 
-        return response.status(201).send();
+      return response.status(201).send();
 
     } catch (err) {
-        console.log(err);
         
         await trx.rollback();
 

@@ -1,57 +1,96 @@
-import React from 'react';
+import React, { useState, FormEvent } from 'react';
+
+import api from '../../services/api';
 
 import PageHeader from '../../components/PageHeader'
-import TeacherItem from '../../components/TeacherItem';
+import TeacherItem, { Teacher } from '../../components/TeacherItem';
+import Input from '../../components/Input';
+import Select from '../../components/Select';
 
 import './styles.css'
 
-
 function TeacherList() {
-    return (
-        <div id="page-teacher-list" className="container">
-            <PageHeader title="Estes são os proffys disponíveis.">
-                <form action="#" id="search-teachers">
-                    <div className="input-block">
-                        <label htmlFor="subject">Materia</label>
-                        <input type="text" id="subject"/>
-                    </div>
+	const [ teachers, setTeachers ] = useState([]);
+	const [ subject, setSubject ] = useState('');
+	const [ week_day, setWeekDay ] = useState('');
+	const [ time, setTime ] = useState('');
 
-                    <div className="input-block">
-                        <label htmlFor="week-day">Dia da semana</label>
-                        <input type="text" id="week-day"/>
-                    </div>
+	async function searchTeachers(e: FormEvent) {
+		e.preventDefault();
 
-                    <div className="input-block">
-                        <label htmlFor="time">Horário</label>
-                        <input type="text" id="time"/>
-                    </div>
-                </form>
-            </PageHeader>
+		const response = await api.get('classes', {
+			params: {
+				subject,
+				week_day,
+				time,
+			}
+		});
 
-            <main>
-                <TeacherItem 
-                    name="Diego Fernandes"
-                    image="https://avatars2.githubusercontent.com/u/2254731?s=460&u=0ba16a79456c2f250e7579cb388fa18c5c2d7d65&v=4"
-                    subject="Química"
-                    description="Entusiasta das melhores tecnologias de química avançada. Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões."
-                    price="R$ 80,00" />
+		setTeachers(response.data);
+	}
 
-                <TeacherItem 
-                    name="João Brito"
-                    image="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-                    subject="Matemática"
-                    description=""
-                    price="R$ 30,00" />
+	return (
+		<div id="page-teacher-list" className="container">
+			<PageHeader title="Estes são os proffys disponíveis.">
+				<form action="#" id="search-teachers" onSubmit={searchTeachers}>
+					<Select 
+						label="Materia" 
+						name="subject"
+						value={subject}
+						onChange={(e) => {setSubject(e.target.value) }}
+						options = {[
+							{ value: 'Artes', label: 'Artes' },
+							{ value: 'Biologia', label: 'Biologia' },
+							{ value: 'Ciências', label: 'Ciências' },
+							{ value: 'Educação Física', label: 'Educação Física' },
+							{ value: 'Espanhol', label: 'Espanhol' },
+							{ value: 'Física', label: 'Física' },
+							{ value: 'Geografia', label: 'Geografia' },
+							{ value: 'História', label: 'História' },
+							{ value: 'Inglês', label: 'Inglês' },
+							{ value: 'Química', label: 'Química' },
+							{ value: 'Matemática', label: 'Matemática' },
+							{ value: 'Português', label: 'História' },
+						]}
+					/>
 
-                <TeacherItem 
-                    name="Carol Bernardes"
-                    image="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-                    subject="História"
-                    description=""
-                    price="R$ 50,00" />
-            </main>
-        </div>
-    );
+					<Select 
+						label="Dia da semana" 
+						name="week_day"
+						value={week_day}
+						onChange={(e) => {setWeekDay(e.target.value) }}
+						options = {[
+							{ value: '0', label: 'Domingo' },
+							{ value: '1', label: 'Segunda-feira' },
+							{ value: '2', label: 'Terça-feira' },
+							{ value: '3', label: 'Quarta-feira ' },
+							{ value: '4', label: 'Quinta-feira' },
+							{ value: '5', label: 'Sexta-feira' },
+							{ value: '6', label: 'Sábado' },
+						]}
+					/>
+
+					<Input
+						type="time"
+						label="Horário"
+						name="time"
+						value={time}
+						onChange={(e) => {setTime(e.target.value) }}
+					/>
+
+					<button 
+						type="submit"
+						onSubmit={searchTeachers}>Buscar</button>
+				</form>
+			</PageHeader>
+
+			<main>
+				{teachers.map((teacher: Teacher) => {
+					return <TeacherItem key={teacher.id} teacher={ teacher } />
+				})}
+			</main>
+		</div>
+	);
 };
 
 export default TeacherList;
