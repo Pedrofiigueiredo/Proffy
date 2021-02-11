@@ -23,15 +23,18 @@
 
   ### Parâmetros
 
-  - [x] **Request Body**: Dados para criação ou atualização de um registro  (request.body)
-  - [x] **Route Params**: Identificar qual recurso (específico) eu quero atualizar ou deletar
-  - [x] **Query Params**: Pagibação, filtros, ordenação... parâmetros não obrigatórios
+  - **Request Body**: Dados para criação ou atualização de um registro
+   
+    `request.body`
 
-  ### Funcionamento básico de cada tipo de parâmetro
+  - **Route Params**: Identificar qual recurso (específico) eu quero atualizar ou deletar
 
-  - request.body -> acessa os dados que o usuário inseriu na página
-  - request:params + /users:id -> acessa um ID específico
-  - request.query + /users?page=2 -> Lista os usuários da página 2, por exemplo
+    `request:params + /users:id`
+
+  - **Query Params**: Pagibação, filtros, ordenação... parâmetros não obrigatórios
+
+    `request.query + /users?page=2`
+
 
   ### Gerenciando rotas na aplicação
 
