@@ -1,5 +1,7 @@
 # Proffy
 
+`README em desenvolvimento`
+
 Uma plataforma web de aulas particulares, em que alunos podem conhecer professores de matérias específicas do ensino médio. Desenvolvido durante a Next Level Week #2 da [Rocketseat](https://rocketseat.com.br)
 
 
